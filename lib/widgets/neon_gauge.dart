@@ -58,7 +58,7 @@ class NeonGauge extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: color.withOpacity(0.8),
+            color: color.withValues(alpha: 0.8),
             fontSize: 11,
             fontWeight: FontWeight.bold,
             letterSpacing: 1,
@@ -116,7 +116,7 @@ class _GaugePainter extends CustomPainter {
       sweep,
       false,
       Paint()
-        ..color = color.withOpacity(0.2)
+        ..color = color.withValues(alpha: 0.2)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 10
         ..strokeCap = StrokeCap.round
@@ -171,7 +171,7 @@ class NeonGraph extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: color.withOpacity(0.8),
+            color: color.withValues(alpha: 0.8),
             fontSize: 11,
             fontWeight: FontWeight.bold,
             letterSpacing: 1,
@@ -236,7 +236,7 @@ class _GraphPainter extends CustomPainter {
         ..shader = LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [color.withOpacity(0.15), color.withOpacity(0.0)],
+          colors: [color.withValues(alpha: 0.15), color.withValues(alpha: 0.0)],
         ).createShader(Rect.fromLTWH(0, 0, size.width, size.height)),
     );
 
@@ -253,7 +253,7 @@ class _GraphPainter extends CustomPainter {
     canvas.drawPath(
       path,
       Paint()
-        ..color = color.withOpacity(0.3)
+        ..color = color.withValues(alpha: 0.3)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 4
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
