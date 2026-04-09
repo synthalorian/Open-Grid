@@ -200,7 +200,7 @@ class _Header extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: GridTheme.surface.withOpacity(0.8),
+        color: GridTheme.surface.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: GridTheme.gridLine),
       ),
@@ -272,7 +272,7 @@ class _GraphCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: GridTheme.surface.withOpacity(0.6),
+        color: GridTheme.surface.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: GridTheme.gridLine),
       ),
@@ -292,7 +292,7 @@ class _CoreBars extends StatelessWidget {
       height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: GridTheme.surface.withOpacity(0.6),
+        color: GridTheme.surface.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: GridTheme.gridLine),
       ),
@@ -349,7 +349,7 @@ class _DiskBars extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: GridTheme.surface.withOpacity(0.6),
+        color: GridTheme.surface.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: GridTheme.gridLine),
       ),
