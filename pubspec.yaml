@@ -1,4 +1,4 @@
-name: gridtape
+name: open_grid
 description: "Retro system monitor — synthwave-themed Linux dashboard"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
