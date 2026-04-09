@@ -1,26 +1,27 @@
-# GridTape
+# Open Grid
 
-Retro system monitor — synthwave-themed Linux dashboard.
+Synthwave-themed system monitor for Linux — real-time stats rendered as an 80s HUD.
 
-## What is GridTape?
+## Features
 
-A synthwave-themed system monitor for Linux. Real-time CPU, GPU, RAM, network, and disk stats rendered as an 80s HUD with scanlines, neon graphs, and VU-style gauges. Built for ricing screenshots.
-
-## Features (Planned)
-
-- **Neon arc gauges** — CPU, memory, disk, swap at a glance
-- **Real-time graphs** — scrolling history for CPU, memory, network
-- **Per-core bars** — see individual core utilization
+- **Neon arc gauges** — CPU, GPU, memory, disk, swap at a glance
+- **Real-time graphs** — scrolling 60-second history for CPU, GPU, memory, network
+- **GPU monitoring** — NVIDIA (nvidia-smi) and AMD (sysfs) with temp and VRAM
+- **Per-core bars** — individual core utilization with color-coded load levels
 - **Scanline overlay** — authentic CRT aesthetic
-- **System info** — hostname, kernel, uptime
-- **Configurable widgets** — choose what to display
-- **Hyprland layer support** — run as a desktop layer (planned)
+- **System info** — hostname, kernel, uptime, CPU model
+- **Disk overview** — all mounted filesystems with usage bars
+
+## Screenshots
+
+*Coming soon*
 
 ## Tech Stack
 
-- **Flutter** (Linux desktop, could also run web)
+- **Flutter** (Linux desktop)
 - **Custom Canvas painters** for all visualizations
-- **procfs/sysfs** for real Linux stats (currently uses demo data)
+- **procfs/sysfs** for real Linux stats — no polling daemons, no dependencies
+- **nvidia-smi** fallback for NVIDIA GPU stats
 
 ## Getting Started
 
@@ -28,6 +29,14 @@ A synthwave-themed system monitor for Linux. Real-time CPU, GPU, RAM, network, a
 flutter pub get
 flutter run -d linux
 ```
+
+## Build
+
+```bash
+flutter build linux --release
+```
+
+Binary lands in `build/linux/x64/release/bundle/open-grid`.
 
 ## License
 

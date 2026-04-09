@@ -16,6 +16,7 @@ class SystemMonitor {
       kernel: await _readKernel(),
       uptimeSeconds: await _readUptime(),
       cpu: await _readCpu(),
+      gpu: await _readGpu(),
       memory: await _readMemory(),
       network: await _readNetwork(),
       disks: await _readDisks(),
@@ -138,6 +139,117 @@ class SystemMonitor {
     } catch (_) {
       return const CpuStats();
     }
+  }
+
+  Future<GpuStats?> _readGpu() async {
+    // Try AMD via sysfs first
+    try {
+      final drmDir = Directory('/sys/class/drm');
+      if (drmDir.existsSync()) {
+        for (final entry in drmDir.listSync()) {
+          final name = entry.path.split('/').last;
+          if (!RegExp(r'^card\d+$').hasMatch(name)) continue;
+
+          final busyFile = File('${entry.path}/device/gpu_busy_percent');
+          if (!busyFile.existsSync()) continue;
+
+          final usage = double.tryParse(
+                  (await busyFile.readAsString()).trim()) ??
+              0;
+
+          // Temperature from hwmon
+          double temp = 0;
+          final hwmonDir = Directory('${entry.path}/device/hwmon');
+          if (hwmonDir.existsSync()) {
+            for (final hwmon in hwmonDir.listSync()) {
+              final tempFile = File('${hwmon.path}/temp1_input');
+              if (tempFile.existsSync()) {
+                temp = (int.tryParse(
+                            (await tempFile.readAsString()).trim()) ??
+                        0) /
+                    1000;
+                break;
+              }
+            }
+          }
+
+          // VRAM
+          int vramUsedMB = 0;
+          int vramTotalMB = 0;
+          final vramUsedFile =
+              File('${entry.path}/device/mem_info_vram_used');
+          final vramTotalFile =
+              File('${entry.path}/device/mem_info_vram_total');
+          if (vramUsedFile.existsSync() && vramTotalFile.existsSync()) {
+            vramUsedMB = ((int.tryParse(
+                            (await vramUsedFile.readAsString()).trim()) ??
+                        0) /
+                    1048576)
+                .round();
+            vramTotalMB = ((int.tryParse(
+                            (await vramTotalFile.readAsString()).trim()) ??
+                        0) /
+                    1048576)
+                .round();
+          }
+
+          // Skip iGPUs with no/tiny VRAM (< 256MB dedicated)
+          if (vramTotalMB > 0 && vramTotalMB < 256) continue;
+
+          // GPU name from lspci-style uevent or fallback
+          String gpuName = 'AMD GPU';
+          try {
+            final uevent =
+                await File('${entry.path}/device/uevent').readAsString();
+            final pciId =
+                RegExp(r'PCI_ID=(\w+):(\w+)').firstMatch(uevent);
+            if (pciId != null) {
+              // Try to get a friendly name from lspci
+              final result = await Process.run(
+                  'lspci', ['-d', '${pciId.group(1)}:${pciId.group(2)}', '-mm']);
+              final output = (result.stdout as String).trim();
+              final nameMatch =
+                  RegExp(r'"([^"]*\[([^\]]+)\])"').firstMatch(output);
+              if (nameMatch != null) {
+                gpuName = nameMatch.group(2)!;
+              }
+            }
+          } catch (_) {}
+
+          return GpuStats(
+            name: gpuName,
+            usagePercent: usage.clamp(0, 100),
+            temperature: temp,
+            memoryUsedMB: vramUsedMB,
+            memoryTotalMB: vramTotalMB,
+            vendor: GpuVendor.amd,
+          );
+        }
+      }
+    } catch (_) {}
+
+    // Try NVIDIA via nvidia-smi
+    try {
+      final result = await Process.run('nvidia-smi', [
+        '--query-gpu=name,utilization.gpu,temperature.gpu,memory.used,memory.total',
+        '--format=csv,noheader,nounits',
+      ]);
+      if (result.exitCode == 0) {
+        final parts = (result.stdout as String).trim().split(',').map((s) => s.trim()).toList();
+        if (parts.length >= 5) {
+          return GpuStats(
+            name: parts[0],
+            usagePercent: (double.tryParse(parts[1]) ?? 0).clamp(0, 100),
+            temperature: double.tryParse(parts[2]) ?? 0,
+            memoryUsedMB: int.tryParse(parts[3]) ?? 0,
+            memoryTotalMB: int.tryParse(parts[4]) ?? 0,
+            vendor: GpuVendor.nvidia,
+          );
+        }
+      }
+    } catch (_) {}
+
+    return null;
   }
 
   Future<MemoryStats> _readMemory() async {

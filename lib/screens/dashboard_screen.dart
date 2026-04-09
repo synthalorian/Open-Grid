@@ -15,6 +15,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final List<double> _cpuHistory = List.filled(60, 0);
   final List<double> _memHistory = List.filled(60, 0);
+  final List<double> _gpuHistory = List.filled(60, 0);
   final List<double> _netHistory = List.filled(60, 0);
   late Timer _timer;
   final _monitor = SystemMonitor();
@@ -46,6 +47,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       _memHistory.removeAt(0);
       _memHistory.add(snapshot.memory.usagePercent);
+
+      _gpuHistory.removeAt(0);
+      _gpuHistory.add(snapshot.gpu?.usagePercent ?? 0);
 
       _netHistory.removeAt(0);
       // Convert to MB/s for readable graph
@@ -97,6 +101,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             : 0,
                         color: GridTheme.neonYellow,
                       ),
+                      if (_snapshot.gpu != null)
+                        NeonGauge(
+                          label: 'GPU',
+                          value: _snapshot.gpu!.usagePercent,
+                          color: GridTheme.neonOrange,
+                          detail: _snapshot.gpu!.temperature > 0
+                              ? '${_snapshot.gpu!.temperature.toStringAsFixed(0)}°C'
+                              : null,
+                        ),
                       NeonGauge(
                         label: 'SWAP',
                         value: _snapshot.memory.swapPercent,
@@ -128,6 +141,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                       ),
+                      if (_snapshot.gpu != null) ...[
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _GraphCard(
+                            child: NeonGraph(
+                              label: 'GPU USAGE',
+                              data: _gpuHistory,
+                              color: GridTheme.neonOrange,
+                            ),
+                          ),
+                        ),
+                      ],
                       const SizedBox(width: 12),
                       Expanded(
                         child: _GraphCard(
@@ -182,7 +207,7 @@ class _Header extends StatelessWidget {
       child: Row(
         children: [
           const Text(
-            'GRIDTAPE',
+            'OPEN GRID',
             style: TextStyle(
               color: GridTheme.neonCyan,
               fontSize: 18,

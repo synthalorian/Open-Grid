@@ -42,6 +42,29 @@ class MemoryStats {
   }
 }
 
+class GpuStats {
+  final String name;
+  final double usagePercent;
+  final double temperature;
+  final int memoryUsedMB;
+  final int memoryTotalMB;
+  final GpuVendor vendor;
+
+  const GpuStats({
+    this.name = '',
+    this.usagePercent = 0,
+    this.temperature = 0,
+    this.memoryUsedMB = 0,
+    this.memoryTotalMB = 0,
+    this.vendor = GpuVendor.unknown,
+  });
+
+  double get memoryPercent =>
+      memoryTotalMB > 0 ? memoryUsedMB / memoryTotalMB * 100 : 0;
+}
+
+enum GpuVendor { nvidia, amd, intel, unknown }
+
 class NetworkStats {
   final int bytesReceived;
   final int bytesSent;
@@ -74,6 +97,7 @@ class DiskStats {
 class SystemSnapshot {
   final DateTime timestamp;
   final CpuStats cpu;
+  final GpuStats? gpu;
   final MemoryStats memory;
   final NetworkStats network;
   final List<DiskStats> disks;
@@ -84,6 +108,7 @@ class SystemSnapshot {
   const SystemSnapshot({
     required this.timestamp,
     this.cpu = const CpuStats(),
+    this.gpu,
     this.memory = const MemoryStats(),
     this.network = const NetworkStats(),
     this.disks = const [],
