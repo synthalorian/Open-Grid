@@ -40,6 +40,32 @@ void main() {
     });
   });
 
+  group('GpuStats', () {
+    test('calculates memory percent', () {
+      const gpu = GpuStats(memoryUsedMB: 4096, memoryTotalMB: 16384);
+      expect(gpu.memoryPercent, 25.0);
+    });
+
+    test('handles zero total memory', () {
+      const gpu = GpuStats();
+      expect(gpu.memoryPercent, 0);
+    });
+
+    test('holds all fields', () {
+      const gpu = GpuStats(
+        name: 'RX 9070 XT',
+        usagePercent: 42,
+        temperature: 65,
+        memoryUsedMB: 2048,
+        memoryTotalMB: 16384,
+        vendor: GpuVendor.amd,
+      );
+      expect(gpu.name, 'RX 9070 XT');
+      expect(gpu.vendor, GpuVendor.amd);
+      expect(gpu.usagePercent, 42);
+    });
+  });
+
   group('CpuStats', () {
     test('defaults to zero', () {
       const cpu = CpuStats();
@@ -56,6 +82,7 @@ void main() {
       expect(snapshot.kernel, '');
       expect(snapshot.uptimeSeconds, 0);
       expect(snapshot.disks, isEmpty);
+      expect(snapshot.gpu, isNull);
     });
 
     test('holds all fields', () {

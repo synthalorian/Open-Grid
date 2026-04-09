@@ -3,11 +3,11 @@ import 'theme/grid_theme.dart';
 import 'screens/dashboard_screen.dart';
 
 void main() {
-  runApp(const GridTapeApp());
+  runApp(const OpenGridApp());
 }
 
-class GridTapeApp extends StatelessWidget {
-  const GridTapeApp({super.key});
+class OpenGridApp extends StatelessWidget {
+  const OpenGridApp({super.key});
 
   @override
   Widget build(BuildContext context) {
