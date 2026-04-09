@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gridtape/services/system_monitor.dart';
+import 'package:open_grid/services/system_monitor.dart';
 
 void main() {
   group('SystemMonitor', () {

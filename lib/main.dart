@@ -12,7 +12,7 @@ class GridTapeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'GridTape',
+      title: 'Open Grid',
       debugShowCheckedModeBanner: false,
       theme: GridTheme.darkTheme,
       home: const DashboardScreen(),

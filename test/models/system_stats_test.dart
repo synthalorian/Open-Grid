@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gridtape/models/system_stats.dart';
+import 'package:open_grid/models/system_stats.dart';
 
 void main() {
   group('MemoryStats', () {
