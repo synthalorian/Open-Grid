@@ -41,3 +41,11 @@ Binary lands in `build/linux/x64/release/bundle/open-grid`.
 ## License
 
 MIT
+
+---
+
+## ☕ Support the Developer
+
+If this project saved you time, solved a problem, or just made your day a little more neon, you can fuel the next one:
+
+[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://buymeacoffee.com/synthalorian)
