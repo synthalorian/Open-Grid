@@ -1,3 +1,5 @@
+![Open-Grid](.github/preview.png)
+
 # Open Grid
 
 Synthwave-themed system monitor for Linux — real-time stats rendered as an 80s HUD.
