@@ -42,7 +42,7 @@ Binary lands in `build/linux/x64/release/bundle/open-grid`.
 
 ## License
 
-MIT
+Apache-2.0, see [LICENSE](LICENSE).
 
 ---
 
